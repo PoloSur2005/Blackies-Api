@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:template-fluent-mysql}",
+            "name": "Debug TemplateFluentMysql",
+            "program": "${workspaceFolder:template-fluent-mysql}/.build/debug/TemplateFluentMysql",
+            "preLaunchTask": "swift: Build Debug TemplateFluentMysql"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:template-fluent-mysql}",
+            "name": "Release TemplateFluentMysql",
+            "program": "${workspaceFolder:template-fluent-mysql}/.build/release/TemplateFluentMysql",
+            "preLaunchTask": "swift: Build Release TemplateFluentMysql"
+        }
+    ]
+}
