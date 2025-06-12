@@ -5,7 +5,7 @@ import Vapor
 final class Level: Model, Content, @unchecked Sendable {
     static let schema = "Level"
 
-    @ID(custom: "id", generatedBy: .database)
+    @ID(custom: "LevelID", generatedBy: .database)
     var id: Int?
 
     @Field(key: "Number")
@@ -22,3 +22,4 @@ final class Level: Model, Content, @unchecked Sendable {
         self.image = image
     }
 }
+

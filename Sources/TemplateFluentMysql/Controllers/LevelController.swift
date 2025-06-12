@@ -24,17 +24,19 @@ struct LevelController: RouteCollection {
     }
 
     func show(req: Request) async throws -> Level {
-        guard let level = try await Level.find(req.parameters.get("levelID"), on: req.db) else {
+        guard let levelID = req.parameters.get("levelID", as: Int.self),
+              let level = try await Level.find(levelID, on: req.db) else {
             throw Abort(.notFound)
         }
         return level
     }
 
     func update(req: Request) async throws -> Level {
-        let updated = try req.content.decode(Level.self)
-        guard let level = try await Level.find(req.parameters.get("levelID"), on: req.db) else {
+        guard let levelID = req.parameters.get("levelID", as: Int.self),
+              let level = try await Level.find(levelID, on: req.db) else {
             throw Abort(.notFound)
         }
+        let updated = try req.content.decode(Level.self)
         level.number = updated.number
         level.image = updated.image
         try await level.save(on: req.db)
@@ -42,10 +44,12 @@ struct LevelController: RouteCollection {
     }
 
     func delete(req: Request) async throws -> HTTPStatus {
-        guard let level = try await Level.find(req.parameters.get("levelID"), on: req.db) else {
+        guard let levelID = req.parameters.get("levelID", as: Int.self),
+              let level = try await Level.find(levelID, on: req.db) else {
             throw Abort(.notFound)
         }
         try await level.delete(on: req.db)
         return .noContent
     }
 }
+

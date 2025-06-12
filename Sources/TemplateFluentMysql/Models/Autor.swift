@@ -5,7 +5,7 @@ import Vapor
 final class Autor: Model, Content, @unchecked Sendable {
     static let schema = "Autor"
 
-    @ID(custom: "id", generatedBy: .database)
+    @ID(custom: "AutorID", generatedBy: .database)
     var id: Int?
 
     @Field(key: "Name")
@@ -22,3 +22,4 @@ final class Autor: Model, Content, @unchecked Sendable {
         self.description = description
     }
 }
+

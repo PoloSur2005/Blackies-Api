@@ -3,25 +3,28 @@ import Fluent
 import FluentMySQLDriver
 import Vapor
 
-// configures your application
 public func configure(_ app: Application) async throws {
-    // uncomment to serve files from /Public folder
+    // Configura la base de datos MySQL con credenciales personalizadas
+    app.databases.use(
+    .mysql(
+        hostname: "db",  // ← Nombre real del contenedor MySQL
+        port: 3306,                     // ← Puerto correcto expuesto por el contenedor
+        username: "api-user",
+        password: "Password1",
+        database: "blackies",
+        tlsConfiguration: .forClient(certificateVerification: .none)
+    ),
+    as: .mysql
+)
+
+
+    // Middleware estático opcional
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
-    app.databases.use(DatabaseConfigurationFactory.mysql(
-        hostname: Environment.get("DATABASE_HOST") ?? "localhost",
-        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? MySQLConfiguration.ianaPortNumber,
-        username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
-        password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
-        database: Environment.get("DATABASE_NAME") ?? "vapor_database"
-    ), as: .mysql)
+    // Agrega aquí tus migraciones si ya las tienes
+    // app.migrations.add(CreateSomething())
 
-    //app.migrations.add(CreateTodo())
-    //app.migrations.add(CreateLevel())
-    //app.migrations.add(CreateAutor())
-    //app.migrations.add(CreateMomo())
-
-
-    // register routes
+    // Carga rutas
     try routes(app)
 }
+
