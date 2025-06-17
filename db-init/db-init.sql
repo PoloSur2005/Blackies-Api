@@ -1,19 +1,7 @@
--- Crear usuarios (no se puede usar IF NOT EXISTS en MySQL 5.7)
-DROP USER IF EXISTS 'api-user'@'%';
-CREATE USER 'api-user'@'%' IDENTIFIED BY 'Password1';
-GRANT ALL PRIVILEGES ON *.* TO 'api-user'@'%' WITH GRANT OPTION;
-
-DROP USER IF EXISTS 'test-user'@'%';
-CREATE USER 'test-user'@'%' IDENTIFIED BY 'Password1';
-GRANT ALL PRIVILEGES ON *.* TO 'test-user'@'%' WITH GRANT OPTION;
-
-FLUSH PRIVILEGES;
-
--- Crear base de datos
-CREATE DATABASE IF NOT EXISTS blackies;
+DROP DATABASE IF EXISTS blackies;
+CREATE DATABASE blackies;
 USE blackies;
 
--- Crear tablas
 CREATE TABLE IF NOT EXISTS Level (
     LevelID INT NOT NULL AUTO_INCREMENT,
     Number INT NOT NULL UNIQUE,
@@ -30,17 +18,16 @@ CREATE TABLE IF NOT EXISTS Autor (
 
 CREATE TABLE IF NOT EXISTS Momo (
     MomoID INT NOT NULL AUTO_INCREMENT,
-    Name VARCHAR(50) NOT NULL UNIQUE,
-    Description VARCHAR(150) NOT NULL,
+    Name VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE,
+    Description VARCHAR(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
     Image VARCHAR(200) NOT NULL,
     AutorID INT NOT NULL,
     LevelID INT NOT NULL,
     PRIMARY KEY(MomoID),
     CONSTRAINT fk_AutorID FOREIGN KEY (AutorID) REFERENCES Autor(AutorID),
     CONSTRAINT fk_LevelID FOREIGN KEY (LevelID) REFERENCES Level(LevelID)
-);
+) CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
--- Insertar datos
 INSERT INTO Level(Number, Image) 
 VALUES
 (1,'/assets/levels/1'),
@@ -53,31 +40,63 @@ ON DUPLICATE KEY UPDATE Image = VALUES(Image);
 
 INSERT INTO Autor(Name, Description)
 VALUES
-('Autor 1','Descripcion 1'),
-('Autor 2','Descripcion 2'),
-('Autor 3','Descripcion 3')
+('Mike', 'Mike'),
+('Salon', 'Salon'),
+('Peter', 'Peter'),
+('Alfred', 'Alfred'),
+('Marco', 'Marco'),
+('Carlos', 'Carlos'),
+('Joel', 'Joel'),
+('Emiliano', 'Emiliano'),
+('Claudio', 'Claudio'),
+('Jefazo', 'Jefazo'),
+('Max', 'Max'),
+('Brandon Tavares', 'Brandon Tavares'),
+('Bbno$', 'Bbno$'),
+('Cesar', 'Cesar'),
+('Sebas', 'Sebas'),
+('Solis', 'Solis'),
+('Moi', 'Moi'),
+('Diego Medina', 'Diego Medina'),
+('Joaquin', 'Joaquin'),
+('Alvaro', 'Alvaro')
 ON DUPLICATE KEY UPDATE Description = VALUES(Description);
+
 
 INSERT INTO Momo(Name, Description, Image, AutorID, LevelID)
 VALUES
-('momo1', 'Descripcion1', '/assets/momos1/', 1, 1),
-('momo2', 'Descripcion2', '/assets/momos2/', 1, 1),
-('momo3', 'Descripcion3', '/assets/momos3/', 1, 1),
-('momo4', 'Descripcion4', '/assets/momos4/', 2, 2),
-('momo5', 'Descripcion5', '/assets/momos5/', 2, 2),
-('momo6', 'Descripcion6', '/assets/momos6/', 2, 2),
-('momo7', 'Descripcion7', '/assets/momos7/', 3, 3),
-('momo8', 'Descripcion8', '/assets/momos8/', 3, 3),
-('momo9', 'Descripcion9', '/assets/momos9/', 3, 3)
-ON DUPLICATE KEY UPDATE 
-    Description = VALUES(Description),
-    Image = VALUES(Image),
-    AutorID = VALUES(AutorID),
-    LevelID = VALUES(LevelID);
+-- Nivel 1
+  ('Codigo MICKEYBANANA',
+   'Codigo MICKEYBANANA en la tienda de Fortnite',
+   'https://res.cloudinary.com/ddfg5b0z1/image/upload/v1749854614/codigomickeybanana_newgye.jpg',
+   1, 1),
+  ('Internet malo',
+   '',
+   'https://res.cloudinary.com/ddfg5b0z1/image/upload/v1749850298/internetmalo_kmlwb0.jpg',
+   2, 1),
+  ('Deudores',
+   'Poster hecho por alumnos de MierdaMedica que fue encontrado y vandalizado por los negroides y devuelto a donde fue encontrado',
+   'https://res.cloudinary.com/ddfg5b0z1/image/upload/v1749853243/deudores_igeyeb.jpg',
+   3, 1),
+  ('Live and play',
+   'Grupo estudiantil de la Salle conformado por puro normi que según les gustan los videojuegos pero nadie esta dispuesto a jugar',
+   'https://res.cloudinary.com/ddfg5b0z1/image/upload/v1749854595/liveandplay_lndhdq.jpg',
+   4, 1),
+  ('Que paso padre',
+   'Frase dicha por Carlos Chavez seguidamente durante primer semestre para saludar',
+   'https://res.cloudinary.com/ddfg5b0z1/image/upload/v1749851442/FATHER_mcaxdi.webp',
+   6, 1),
+  ('Gato Queso',
+   'Emoji utilizado frecuentemente por Joel durante prepa cuando algo le daba risa',
+   'https://res.cloudinary.com/ddfg5b0z1/image/upload/v1749850544/gatoqueso_a9gzuw.jpg',
+   7, 1)
+ON DUPLICATE KEY UPDATE
+  Description = VALUES(Description),
+  Image       = VALUES(Image),
+  AutorID     = VALUES(AutorID),
+  LevelID     = VALUES(LevelID);
 
--- Crear vista (no se puede usar IF NOT EXISTS, así que se elimina primero)
 DROP VIEW IF EXISTS vw_Momo;
-
 CREATE VIEW vw_Momo AS 
     SELECT 
         M.MomoID,
@@ -92,10 +111,8 @@ CREATE VIEW vw_Momo AS
     INNER JOIN Autor AS A ON M.AutorID = A.AutorID
     INNER JOIN Level AS L ON M.LevelID = L.LevelID;
 
--- Procedimientos almacenados (eliminar si existen)
-DELIMITER //
-
 DROP PROCEDURE IF EXISTS sp_FilterByLevel;
+DELIMITER //
 CREATE PROCEDURE sp_FilterByLevel(IN LevelToSearch INT)
 BEGIN
     SELECT 
@@ -106,8 +123,10 @@ BEGIN
     INNER JOIN Level AS L ON M.LevelID = L.LevelID
     WHERE L.Number = LevelToSearch;
 END //
+DELIMITER ;
 
 DROP PROCEDURE IF EXISTS sp_FilterByAutor;
+DELIMITER //
 CREATE PROCEDURE sp_FilterByAutor(IN AutorToSearch VARCHAR(50))
 BEGIN
     SELECT 
@@ -118,12 +137,12 @@ BEGIN
     INNER JOIN Autor AS A ON M.AutorID = A.AutorID
     WHERE A.Name = AutorToSearch;
 END //
+DELIMITER ;
 
 DROP PROCEDURE IF EXISTS sp_GetMomo;
+DELIMITER //
 CREATE PROCEDURE sp_GetMomo(IN IDToSearch INT)
 BEGIN
     SELECT * FROM vw_Momo WHERE vw_Momo.MomoID = IDToSearch;
 END //
-
 DELIMITER ;
-
