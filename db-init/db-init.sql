@@ -30,12 +30,12 @@ CREATE TABLE IF NOT EXISTS Momo (
 
 INSERT INTO Level(Number, Image) 
 VALUES
-(1,'/assets/levels/1'),
-(2,'/assets/levels/2'),
-(3,'/assets/levels/3'),
-(4,'/assets/levels/4'),
-(5,'/assets/levels/5'),
-(6,'/assets/levels/6')
+(1,'https://res.cloudinary.com/ddfg5b0z1/image/upload/v1750175248/LEVEL-1_bc1tbt.jpg'),
+(2,'https://res.cloudinary.com/ddfg5b0z1/image/upload/v1750175299/LEVEL-2_uxdjew.jpg'),
+(3,'https://res.cloudinary.com/ddfg5b0z1/image/upload/v1750175328/LEVEL-3_dbfbzr.jpg'),
+(4,'https://res.cloudinary.com/ddfg5b0z1/image/upload/v1750175355/LEVEL-4_yqaxfv.jpg'),
+(5,'https://res.cloudinary.com/ddfg5b0z1/image/upload/v1750175413/LEVEL-5_sjl4ct.jpg'),
+(6,'https://res.cloudinary.com/ddfg5b0z1/image/upload/v1750175440/LEVEL-6_shj2bk.jpg')
 ON DUPLICATE KEY UPDATE Image = VALUES(Image);
 
 INSERT INTO Autor(Name, Description)
